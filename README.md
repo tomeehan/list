@@ -17,4 +17,4 @@ It’s a single page UITableView application.
 
 #### Screenshot
 
-![](https://github.com/tomeehan/list/blob/master/Simulator%20Screen%20Shot%2030%20Oct%202016%2C%2021.13.05.png)
+![](https://github.com/tomeehan/list/blob/master/Screenshot.png)
