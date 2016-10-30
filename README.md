@@ -2,7 +2,7 @@
 
 List is my personal to-do list. 
 
-It’s a single page UITableView application. 
+It’s a single page UITableView application using Core Data. 
 
 - Add an item by tapping `+` in the top right. 
 - Delete an item by tapping the cell. 
