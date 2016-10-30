@@ -94,7 +94,7 @@ class tableViewController: UITableViewController {
         
         let managedContext = appDelegate.managedObjectContext
         
-        let fetchRequest = NSFetchRequest(entityName: "ListEntity")
+        let fetchRequest:NSFetchRequest<NSFetchRequestResult> = NSFetchRequest(entityName: "ListEntity")
         
         do {
             let results = try managedContext.fetch(fetchRequest)
