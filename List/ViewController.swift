@@ -17,14 +17,14 @@ class tableViewController: UITableViewController {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
         
-        self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.Add, target: self, action: Selector("addItem"))
+        self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.add, target: self, action: #selector(tableViewController.addItem))
         self.navigationItem.title = "To-do"
     }
     
     func addItem(){
-        let alertController = UIAlertController(title: "Add To-do", message: "Keep it simple..", preferredStyle: .Alert)
+        let alertController = UIAlertController(title: "Add To-do", message: "Keep it simple..", preferredStyle: .alert)
         
-        let confirmAction = UIAlertAction(title: "Add", style: UIAlertActionStyle.Default, handler: ({
+        let confirmAction = UIAlertAction(title: "Add", style: UIAlertActionStyle.default, handler: ({
             (_) in
             if let field = alertController.textFields![0] as? UITextField {
                 
@@ -35,9 +35,9 @@ class tableViewController: UITableViewController {
         }
         ))
         
-        let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertActionStyle.Cancel, handler: nil)
+        let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertActionStyle.cancel, handler: nil)
         
-        alertController.addTextFieldWithConfigurationHandler({
+        alertController.addTextField(configurationHandler: {
             (textField) in
             
             textField.placeholder = "Type in something"
@@ -51,17 +51,17 @@ class tableViewController: UITableViewController {
         alertController.addAction(confirmAction)
         alertController.addAction(cancelAction)
         
-        self.presentViewController(alertController, animated: true, completion: nil )
+        self.present(alertController, animated: true, completion: nil )
     }
 
-    func saveItem(itemToSave: String){
-        let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
+    func saveItem(_ itemToSave: String){
+        let appDelegate = UIApplication.shared.delegate as! AppDelegate
         
         let managedContext = appDelegate.managedObjectContext
         
-        let entity = NSEntityDescription.entityForName("ListEntity", inManagedObjectContext: managedContext)
+        let entity = NSEntityDescription.entity(forEntityName: "ListEntity", in: managedContext)
         
-        let item = NSManagedObject(entity: entity!, insertIntoManagedObjectContext: managedContext)
+        let item = NSManagedObject(entity: entity!, insertInto: managedContext)
         
         item.setValue(itemToSave, forKey: "item")
         
@@ -76,28 +76,28 @@ class tableViewController: UITableViewController {
         }
     }
     
-    override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let appDelegate = UIApplication.shared.delegate as! AppDelegate
         
         let managedContext = appDelegate.managedObjectContext
         
-        tableView.reloadRowsAtIndexPaths([indexPath], withRowAnimation: UITableViewRowAnimation.Right)
+        tableView.reloadRows(at: [indexPath], with: UITableViewRowAnimation.right)
         
-        managedContext.deleteObject(listItems[indexPath.row])
-        listItems.removeAtIndex(indexPath.row)
+        managedContext.delete(listItems[(indexPath as NSIndexPath).row])
+        listItems.remove(at: (indexPath as NSIndexPath).row)
         self.tableView.reloadData()
 
     }
     
-    override func viewWillAppear(animated: Bool) {
-        let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
+    override func viewWillAppear(_ animated: Bool) {
+        let appDelegate = UIApplication.shared.delegate as! AppDelegate
         
         let managedContext = appDelegate.managedObjectContext
         
         let fetchRequest = NSFetchRequest(entityName: "ListEntity")
         
         do {
-            let results = try managedContext.executeFetchRequest(fetchRequest)
+            let results = try managedContext.fetch(fetchRequest)
             listItems = results as! [NSManagedObject]
         } catch {
             print("Error")
@@ -110,26 +110,26 @@ class tableViewController: UITableViewController {
         // Dispose of any resources that can be recreated.
     }
 
-    override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return listItems.count
     }
     
-    override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier("Cell")! as UITableViewCell
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "Cell")! as UITableViewCell
         
-        let item = listItems[indexPath.row]
+        let item = listItems[(indexPath as NSIndexPath).row]
         
-        cell.textLabel?.text = item.valueForKey("item") as! String
+        cell.textLabel?.text = item.value(forKey: "item") as! String
         cell.textLabel?.font = UIFont(name:"HelveticaNeue-Bold", size: 32.0)
         cell.textLabel?.textColor = UIColor(red:0.25, green:0.25, blue:0.25, alpha:1.0)
         
-        if ((cell.textLabel?.text?.rangeOfString("!")) != nil){
+        if ((cell.textLabel?.text?.range(of: "!")) != nil){
         
-            cell.textLabel?.textColor = UIColor.redColor()
+            cell.textLabel?.textColor = UIColor.red
         }
         
-        if ((cell.textLabel?.text?.rangeOfString("999")) != nil) {
-            cell.textLabel?.textColor = UIColor.redColor()
+        if ((cell.textLabel?.text?.range(of: "999")) != nil) {
+            cell.textLabel?.textColor = UIColor.red
         }
         
         
